@@ -1,6 +1,3 @@
-# Code used for creating a subset of the covid data (CSV) which includes only observations after the date of the first monkey pox observation
-
-from datetime import datetime
 import requests
 import urllib
 import codecs
@@ -14,6 +11,7 @@ import datetime
 import numpy as np
 import pandas
 from matplotlib.patches import Patch
+from datetime import datetime
 
 
 def csv_converter(url):
@@ -167,7 +165,6 @@ def accessData(datadict):
     return datadict
 
 
-#########################
 
 def parseFile(datadict, format):
 
@@ -374,7 +371,6 @@ def describeFile(datadict):
         return result
 
 
-##########################
 
 data = pd.read_csv('data_notebook-1_extcovid.csv')
 
@@ -404,11 +400,23 @@ for i in country_aggregate:
 # transforming the dictionary into a dataframe
 data_aggregate = pd.DataFrame(data_aggregate)
 # changing the months from numbers into abbreviations
-for i in range(len(data_aggregate)):
-    data_aggregate['month'].replace(to_replace=data_aggregate['month'][i],
-                                    value=(datetime.date(1900, data_aggregate['month'][i], 1).strftime("%b")),
-                                    inplace=True)
+month_mapping = {
+    1: 'Jan',
+    2: 'Feb',
+    3: 'Mar',
+    4: 'Apr',
+    5: 'May',
+    6: 'Jun',
+    7: 'Jul',
+    8: 'Aug',
+    9: 'Sep',
+    10: 'Oct',
+    11: 'Nov',
+    12: 'Dec'
+}
 
+# Replace numerical months with abbreviations
+data_aggregate['month'] = data_aggregate['month'].map(month_mapping)
 # PLOTTING
 
 # setting the size of the figure
